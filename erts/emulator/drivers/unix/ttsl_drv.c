@@ -596,7 +596,7 @@ static int check_buf_size(byte *s, int n)
 	    ++pos;
 	} 
 	if (utf8_mode) { /* That is, terminal is UTF8 compliant */
-	    if (ch >= 128 || isprint(ch)) {
+	    if (ch == 27  || ch >= 128 || isprint(ch)) {
 		DEBUGLOG(("Printable(UTF-8:%d):%d",(pos - opos),ch));
 		size++; /* Buffer contains wide characters... */
 	    } else if (ch == '\t') {
@@ -606,7 +606,7 @@ static int check_buf_size(byte *s, int n)
 		size += 2;
 	    }
 	} else {
-	    if (ch <= 255 && isprint(ch)) {
+	    if (ch == 27 || ch <= 255 && isprint(ch)) {
 		DEBUGLOG(("Printable:%d",ch));
 		size++;
 	    } else if (ch == '\t') 
@@ -898,7 +898,7 @@ static int insert_buf(byte *s, int n)
 	    DEBUGLOG(("insert_buf: Invalid UTF8:%d",ch));
 	    ++pos;
 	}
-	if ((utf8_mode && (ch >= 128 || isprint(ch))) || (ch <= 255 && isprint(ch))) {
+	if ((utf8_mode && (ch == 27 || ch >= 128 || isprint(ch))) || (ch <= 255 && isprint(ch))) {
 	    DEBUGLOG(("insert_buf: Printable(UTF-8):%d",ch));
 	    lbuf[lpos++] = (Uint32) ch;
 	} else if (ch >= 128) { /* not utf8 mode */
